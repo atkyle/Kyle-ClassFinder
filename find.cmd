@@ -1,0 +1,1 @@
+ java -jar build/libs/Kyle-ClassFinder-1.0.jar %1 %2

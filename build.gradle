@@ -1,0 +1,34 @@
+apply plugin: 'java'
+defaultTasks 'jar'
+version = '1.0'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+def localMavenRepo = 'file://D:/Tools/apache-maven-repo'
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'org.apache.commons:commons-lang3:3.17.0'
+}
+
+jar {
+	from {
+		configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
+
+	manifest {
+		attributes(
+			'Main-Class': 'com.kyle.utils.ClassFinder'
+		)
+	}
+
+	duplicatesStrategy 'exclude'
+}
+
+[compileJava]*.options*.encoding = 'UTF-8'
