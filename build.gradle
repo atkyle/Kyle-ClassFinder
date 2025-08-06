@@ -2,8 +2,10 @@ apply plugin: 'java'
 defaultTasks 'jar'
 version = '1.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 def localMavenRepo = 'file://D:/Tools/apache-maven-repo'
 
@@ -29,6 +31,12 @@ jar {
 	}
 
 	duplicatesStrategy 'exclude'
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
+    }
 }
 
 [compileJava]*.options*.encoding = 'UTF-8'

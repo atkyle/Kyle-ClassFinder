@@ -15,6 +15,7 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -29,7 +30,7 @@ public class ClassFinder {
 			System.exit(0);
 		}
 		String classFullname = args[0];
-		String classPathname = StringUtils.replaceAll(classFullname, "\\.", "/");
+		String classPathname = RegExUtils.replaceAll(classFullname, "\\.", "/");
 		if (!StringUtils.endsWith(classPathname, ".class")) {
 			classPathname += ".class";
 		}
@@ -38,9 +39,8 @@ public class ClassFinder {
 		List<File> tldFiles = new ArrayList<File>();
 		
 		for (File jarFile:jarFiles) {
-			try {
-				ZipFile zipFile = new ZipFile(jarFile);
-				Enumeration<ZipEntry> zipEntries = (Enumeration<ZipEntry>)zipFile.entries();
+			try (ZipFile zipFile = new ZipFile(jarFile)) {
+				Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 				while (zipEntries.hasMoreElements()) {
 					ZipEntry zipEntry = zipEntries.nextElement();
 					if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".class")
